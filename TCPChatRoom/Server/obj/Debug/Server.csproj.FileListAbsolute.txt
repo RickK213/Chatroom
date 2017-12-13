@@ -15,3 +15,6 @@ C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Note
 C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Notes\ChatroomStarter (1)\ChatroomStarter\ChatroomStarter\ChatroomStarter\Server\bin\Debug\Server.exe
 C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Notes\ChatroomStarter (1)\ChatroomStarter\ChatroomStarter\ChatroomStarter\Server\bin\Debug\Server.pdb
 C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Notes\ChatroomStarter (1)\ChatroomStarter\ChatroomStarter\ChatroomStarter\Server\obj\Debug\Server.csprojResolveAssemblyReference.cache
+C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Code\Chatroom\TCPChatRoom\Server\bin\Debug\Server.exe.config
+C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Code\Chatroom\TCPChatRoom\Server\obj\Debug\Server.exe
+C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Code\Chatroom\TCPChatRoom\Server\obj\Debug\Server.pdb
