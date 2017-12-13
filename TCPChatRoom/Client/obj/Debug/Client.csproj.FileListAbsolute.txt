@@ -4,3 +4,9 @@ c:\users\hobbitmafia\Dropbox\C#\ChatroomStarter\Client\bin\Debug\Client.pdb
 c:\users\hobbitmafia\Dropbox\C#\ChatroomStarter\Client\obj\Debug\Client.exe
 c:\users\hobbitmafia\Dropbox\C#\ChatroomStarter\Client\obj\Debug\Client.pdb
 c:\users\hobbitmafia\Dropbox\C#\ChatroomStarter\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\Eddie\Desktop\devCodeCamp\devCodeCamp\Chatroom\TCPChatRoom\Client\bin\Debug\Client.exe.config
+C:\Users\Eddie\Desktop\devCodeCamp\devCodeCamp\Chatroom\TCPChatRoom\Client\obj\Debug\Client.exe
+C:\Users\Eddie\Desktop\devCodeCamp\devCodeCamp\Chatroom\TCPChatRoom\Client\obj\Debug\Client.pdb
+C:\Users\Eddie\Desktop\devCodeCamp\devCodeCamp\Chatroom\TCPChatRoom\Client\bin\Debug\Client.exe
+C:\Users\Eddie\Desktop\devCodeCamp\devCodeCamp\Chatroom\TCPChatRoom\Client\bin\Debug\Client.pdb
+C:\Users\Eddie\Desktop\devCodeCamp\devCodeCamp\Chatroom\TCPChatRoom\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
