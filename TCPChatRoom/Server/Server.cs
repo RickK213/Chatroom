@@ -10,10 +10,9 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    //implement IObervable interface
-    class Server : IObservable<TcpClient>
+    class Server
     {
-        public static Client client; //Instead of 1 client, we need a dictionary of clients
+        public static Client client;
         TcpListener server;
         public Server()
         {
@@ -22,19 +21,10 @@ namespace Server
         }
         public void Run()
         {
-            AcceptClient(); //we need to accept a client every time a new client program instance starts to run
-            //we need a loop here that uses concurrency to allow all users in the dictionary to send messages
-                string message = client.Recieve();
-                Respond(message);
-            //end of loop ?
+            AcceptClient();
+            string message = client.Recieve();
+            Respond(message);
         }
-
-        public IDisposable Subscribe(IObserver<TcpClient> observer)
-        {
-            //write this
-
-        }
-
         private void AcceptClient()
         {
             TcpClient clientSocket = default(TcpClient);
