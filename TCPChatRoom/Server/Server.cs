@@ -12,7 +12,7 @@ namespace Server
 {
     class Server
     {
-        public static Client client;
+        public static User client;
         TcpListener server;
         public Server()
         {
@@ -31,7 +31,7 @@ namespace Server
             clientSocket = server.AcceptTcpClient();
             Console.WriteLine("Connected");
             NetworkStream stream = clientSocket.GetStream();
-            client = new Client(stream, clientSocket);
+            client = new User(stream, clientSocket);
         }
         private void Respond(string body)
         {
