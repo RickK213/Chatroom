@@ -10,3 +10,9 @@ C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Note
 C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Notes\ChatroomStarter (1)\ChatroomStarter\ChatroomStarter\ChatroomStarter\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
 C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Notes\ChatroomStarter (1)\ChatroomStarter\ChatroomStarter\ChatroomStarter\Client\obj\Debug\Client.exe
 C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Notes\ChatroomStarter (1)\ChatroomStarter\ChatroomStarter\ChatroomStarter\Client\obj\Debug\Client.pdb
+C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Code\Chatroom\TCPChatRoom\Client\bin\Debug\Client.exe.config
+C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Code\Chatroom\TCPChatRoom\Client\bin\Debug\Client.exe
+C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Code\Chatroom\TCPChatRoom\Client\bin\Debug\Client.pdb
+C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Code\Chatroom\TCPChatRoom\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Code\Chatroom\TCPChatRoom\Client\obj\Debug\Client.exe
+C:\Users\Rick Kippert\Dropbox\_devCodeCamp\Assignments\week8-3-tcp-chatroom\Code\Chatroom\TCPChatRoom\Client\obj\Debug\Client.pdb
