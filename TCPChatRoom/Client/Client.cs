@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Client
 {
-    class Client
+    class Client : IObserver<TcpClient>
     {
         TcpClient clientSocket;
         NetworkStream stream;
@@ -29,6 +29,24 @@ namespace Client
             byte[] recievedMessage = new byte[256];
             stream.Read(recievedMessage, 0, recievedMessage.Length);
             UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage));
+        }
+
+        public void OnNext(TcpClient value)
+        {
+            //write this
+            throw new NotImplementedException();
+        }
+
+        public void OnError(Exception error)
+        {
+            //write this
+            throw new NotImplementedException();
+        }
+
+        public void OnCompleted()
+        {
+            //write this
+            throw new NotImplementedException();
         }
     }
 }
