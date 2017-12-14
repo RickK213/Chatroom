@@ -40,9 +40,27 @@ namespace Server
 
         public void Run()
         {
-            AcceptClient();
-            string message = client.Recieve();
-            Respond(message);
+            while(true)
+            {
+                Parallel.Invoke(
+                () =>
+                {
+                    Console.WriteLine("Begin first task...");
+                    AcceptClient();
+                    string message = client.Recieve();
+                    Respond(message);
+                },  // close first Action
+
+                () =>
+                {
+                    Console.WriteLine("Begin second task...");
+
+                }
+            ); //close parallel.invoke
+            }
+            
+            //string message = client.Recieve();
+            //Respond(message);
         }
         private void AcceptClient()
         {
