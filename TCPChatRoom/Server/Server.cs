@@ -12,7 +12,8 @@ namespace Server
 {
     class Server
     {
-        public static User client;
+        //public static User user;
+        public static Dictionary<int, User> users = new Dictionary<int, User>();
         TcpListener server;
         public Server()
         {
@@ -42,37 +43,33 @@ namespace Server
         {
             while(true)
             {
+                //This thread is always listening for new clients (users)
+                //TO DO: use a try catch here
                 Parallel.Invoke(
-                () =>
-                {
-                    Console.WriteLine("Begin first task...");
-                    AcceptClient();
-                    string message = client.Recieve();
-                    Respond(message);
-                },  // close first Action
-
-                () =>
-                {
-                    Console.WriteLine("Begin second task...");
-
-                }
-            ); //close parallel.invoke
+                    () =>
+                    {
+                        AcceptUser();
+                    }
+                );
             }
             
             //string message = client.Recieve();
             //Respond(message);
         }
-        private void AcceptClient()
+
+        private void AcceptUser()
         {
             TcpClient clientSocket = default(TcpClient);
             clientSocket = server.AcceptTcpClient(); //this is blocking
             Console.WriteLine("Connected");
             NetworkStream stream = clientSocket.GetStream();
-            client = new User(stream, clientSocket);
+            User user = new User(stream, clientSocket);
+            users.Add(user.UserId, user);
         }
+
         private void Respond(string body)
         {
-             client.Send(body);
+             //user.Send(body);
         }
     }
 }

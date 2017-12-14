@@ -11,12 +11,12 @@ namespace Server
     {
         NetworkStream stream;
         TcpClient client;
-        public string UserId;
+        public int UserId;
         public User(NetworkStream Stream, TcpClient Client)
         {
             stream = Stream;
             client = Client;
-            UserId = "495933b6-1762-47a1-b655-483510072e73";
+            UserId = stream.GetHashCode();
         }
         public void Send(string Message)
         {
