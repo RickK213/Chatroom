@@ -19,10 +19,15 @@ namespace Server
 
             string hostName = Dns.GetHostName();
             IPHostEntry host = Dns.GetHostEntry(hostName);
-            string computerIPAddress = host.AddressList[2].ToString();
-            Console.WriteLine("Local Computer IP Address: " + computerIPAddress);
+            //string computerIPAddress = host.AddressList[2].ToString();
+            foreach(var item in host.AddressList)
+            {
+                Console.WriteLine(item);
+            }
+            Console.ReadLine();
+            //Console.WriteLine("Local Computer IP Address: " + computerIPAddress);
             Console.WriteLine();
-            server = new TcpListener(IPAddress.Parse(computerIPAddress), 9999);
+            //server = new TcpListener(IPAddress.Parse(computerIPAddress), 9999);
             server.Start();
         }
         public void Run()
