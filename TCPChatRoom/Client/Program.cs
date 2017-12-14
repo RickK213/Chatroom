@@ -17,7 +17,7 @@ namespace Client
             while(true)
             {
                 client.Send();
-                //client.Recieve();
+                client.Recieve();
             }
             Console.ReadLine();
         }

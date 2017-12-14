@@ -73,19 +73,52 @@ namespace Server
             //Respond(message);
         }
 
-        private Task SendAllMessages()
+        Task SendAllMessages()
         {
             return Task.Run(() =>
             {
-                if (messages.Count > 0)
+                for (int i = 0; i < users.Count; i++)
                 {
-                    SendMessages(messages.Dequeue());
+                    Parallel.Invoke(
+                        async () =>
+                        {
+                            //YOU ARE HERE!!!!!!! NEED TO GET THIS TO WORK ASYNC...RIGHT NOW USER MUST SEND TO RECEIVE
+                            if (messages.Count>0)
+                            {
+                                await SendUserMessage(users.ElementAt(i).Value, messages.Dequeue());
+                            }
+                        }
+                    );
                 }
             }
             );
         }
 
-        private Task GetAllMessages()
+        //void SendMessages(Message message)
+        //{
+        //    for (int i=0; i<users.Count; i++)
+        //    {
+        //        Parallel.Invoke(
+        //            async () =>
+        //            {
+        //                await SendUserMessage(users.ElementAt(i).Value, message);
+        //            }
+        //        );
+        //    }
+        //}
+
+
+        Task SendUserMessage(User user, Message message)
+        {
+            return Task.Run(() =>
+            {
+                user.Send(message);
+            }
+            );
+        }
+
+
+        Task GetAllMessages()
         {
             return Task.Run(() =>
             {
@@ -113,14 +146,6 @@ namespace Server
             );
         }
 
-        void SendMessages(Message message)
-        {
-            foreach (KeyValuePair<int, User> entry in users)
-            {
-                entry.Value.Send(message);
-            }
-        }
-
         private Task AcceptUser()
         {
             return Task.Run(() =>
@@ -135,9 +160,5 @@ namespace Server
             );
         }
 
-        private void Respond(string body)
-        {
-             //user.Send(body);
-        }
     }
 }
