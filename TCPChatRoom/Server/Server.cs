@@ -19,7 +19,6 @@ namespace Server
             string computerIPAddress = GetComputerIPAddress();
             Console.WriteLine("Local Computer IP Address: " + computerIPAddress);
             Console.WriteLine();
-            //testing git
             server = new TcpListener(IPAddress.Parse(computerIPAddress), 9999);
             server.Start();
         }
