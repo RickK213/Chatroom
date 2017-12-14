@@ -12,11 +12,16 @@ namespace Server
 {
     class Server
     {
-        //public static User user;
-        public static Dictionary<int, User> users = new Dictionary<int, User>();
+        //member variables
+        Dictionary<int, User> users;
         TcpListener server;
+        Queue<Message> messages;
+
+        //constructor
         public Server()
         {
+            messages = new Queue<Message>();
+            users = new Dictionary<int, User>();
             string computerIPAddress = GetComputerIPAddress();
             Console.WriteLine("Local Computer IP Address: " + computerIPAddress);
             Console.WriteLine();
@@ -43,28 +48,91 @@ namespace Server
         {
             while(true)
             {
-                //This thread is always listening for new clients (users)
                 //TO DO: use a try catch here
                 Parallel.Invoke(
-                    () =>
+                    //This thread is always listening for new clients (users)
+                    async () =>
                     {
-                        AcceptUser();
+                        await AcceptUser();
+                    },
+                    //This thread is always listening for new messages
+                    async () =>
+                    {
+                        await GetAllMessages();
+                    },
+                    //This thread is always sending new messages
+                    async () =>
+                    {
+                        await SendAllMessages();
                     }
                 );
+
             }
-            
+
             //string message = client.Recieve();
             //Respond(message);
         }
 
-        private void AcceptUser()
+        private Task SendAllMessages()
         {
-            TcpClient clientSocket = default(TcpClient);
-            clientSocket = server.AcceptTcpClient(); //this is blocking
-            Console.WriteLine("Connected");
-            NetworkStream stream = clientSocket.GetStream();
-            User user = new User(stream, clientSocket);
-            users.Add(user.UserId, user);
+            return Task.Run(() =>
+            {
+                if (messages.Count > 0)
+                {
+                    SendMessages(messages.Dequeue());
+                }
+            }
+            );
+        }
+
+        private Task GetAllMessages()
+        {
+            return Task.Run(() =>
+            {
+                for (int i = 0; i < users.Count; i++)
+                    {
+                        Parallel.Invoke(
+                            async () =>
+                            {
+                                await GetUserMessage(users.ElementAt(i).Value);
+                            }
+                        );
+                    }
+                }
+            );
+        }
+
+        Task GetUserMessage(User user)
+        {
+            return Task.Run(() =>
+            {
+                Message message = user.Recieve();
+                Console.WriteLine(message.Body);
+                messages.Enqueue(message);
+            }
+            );
+        }
+
+        void SendMessages(Message message)
+        {
+            foreach (KeyValuePair<int, User> entry in users)
+            {
+                entry.Value.Send(message);
+            }
+        }
+
+        private Task AcceptUser()
+        {
+            return Task.Run(() =>
+                {
+                    TcpClient clientSocket = default(TcpClient);
+                    clientSocket = server.AcceptTcpClient(); //this is blocking
+                    Console.WriteLine("Connected");
+                    NetworkStream stream = clientSocket.GetStream();
+                    User user = new User(stream, clientSocket);
+                    users.Add(user.UserId, user);
+                }
+            );
         }
 
         private void Respond(string body)
