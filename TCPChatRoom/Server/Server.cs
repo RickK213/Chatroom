@@ -66,24 +66,56 @@ namespace Server
                     async () =>
                     {
                         await SendAllMessages();
+                    },
+                    async () =>
+                    {
+                        await CheckIfConnected();
                     }
+
                 );
 
             }
+        }
+
+        Task CheckIfConnected()
+        {
+            return Task.Run(() =>
+            {
+                Object userListLock = new object();
+                //lock (userListLock)
+                //{
+                    for (int i = 0; i < users.Count; i++)
+                    {
+                        User currentUser = (User)users.ElementAt(i).Value;
+                        if (!currentUser.CheckIfConnected())
+                        {
+                            Message message = new Message(currentUser, "I've left the chat!");
+                            log.Save(message);
+                            int userKey = users.ElementAt(i).Key;
+                            users.Remove(userKey);
+                        }
+                    }
+                //}
+            }
+            );
         }
 
         Task SendAllMessages()
         {
             return Task.Run(() =>
             {
-                if (messages.Count>0)
+                Object messageLock = new object();
+                lock ( messageLock )
                 {
-                    for (int i = 0; i < users.Count; i++)
+                    if (messages.Count > 0)
                     {
-                        Message currentMessage = messages.ElementAt(messages.Count - 1);
-                        users.ElementAt(i).Value.Send(currentMessage);
+                        for (int i = 0; i < users.Count; i++)
+                        {
+                            Message currentMessage = messages.ElementAt(messages.Count - 1);
+                            users.ElementAt(i).Value.Send(currentMessage);
+                        }
+                        messages.Dequeue();
                     }
-                    messages.Dequeue();
                 }
             }
             );
@@ -93,7 +125,10 @@ namespace Server
         {
             return Task.Run(() =>
             {
-                user.Send(message);
+                if (user.CheckIfConnected())
+                {
+                    user.Send(message);
+                }
             }
             );
         }
@@ -102,14 +137,19 @@ namespace Server
         {
             return Task.Run(() =>
             {
-                for (int i = 0; i < users.Count; i++)
-                    {
-                        Parallel.Invoke(
-                            async () =>
-                            {
-                                await GetUserMessage(users.ElementAt(i).Value);
-                            }
-                        );
+                Object messageLock = new object();
+                lock (messageLock)
+                {
+
+                    for (int i = 0; i < users.Count; i++)
+                        {
+                            Parallel.Invoke(
+                                async () =>
+                                {
+                                    await GetUserMessage(users.ElementAt(i).Value);
+                                }
+                            );
+                        }
                     }
                 }
             );
@@ -119,10 +159,13 @@ namespace Server
         {
             return Task.Run(() =>
             {
-                Message message = user.Recieve();
-                Console.WriteLine(message.Body);
-                log.Save(message);
-                messages.Enqueue(message);
+                if (user.CheckIfConnected())
+                {
+                    Message message = user.Recieve();
+                    Console.WriteLine(message.Body);
+                    log.Save(message);
+                    messages.Enqueue(message);
+                }
             }
             );
         }

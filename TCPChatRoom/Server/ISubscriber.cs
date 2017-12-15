@@ -10,5 +10,7 @@ namespace Server
     {
         void Send(Message message);
         Message Recieve();
+        bool CheckIfConnected();
+        void CloseStream();
     }
 }
