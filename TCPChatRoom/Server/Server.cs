@@ -82,20 +82,21 @@ namespace Server
             return Task.Run(() =>
             {
                 Object userListLock = new object();
-                //lock (userListLock)
-                //{
+                lock (userListLock)
+                {
                     for (int i = 0; i < users.Count; i++)
                     {
                         User currentUser = (User)users.ElementAt(i).Value;
                         if (!currentUser.CheckIfConnected())
                         {
                             Message message = new Message(currentUser, "I've left the chat!");
+                            messages.Enqueue(message);
                             log.Save(message);
                             int userKey = users.ElementAt(i).Key;
                             users.Remove(userKey);
                         }
                     }
-                //}
+                }
             }
             );
         }
@@ -174,18 +175,22 @@ namespace Server
         {
             return Task.Run(() =>
                 {
-                    TcpClient clientSocket = default(TcpClient);
-                    clientSocket = server.AcceptTcpClient();
-                    Console.WriteLine("Connected");
-                    NetworkStream stream = clientSocket.GetStream();                    
-                    User user = new User(stream, clientSocket);
-                    user.displayName = user.ReceiveDisplayName();
-                    users.Add(user.UserId, user);                    
-                    Message notification = new Message(user, "I've joined the chat!");
-                    log.Save(notification);
-                    for (int i = 0; i < users.Count; i++)
+                    Object userListLock = new object();
+                    lock (userListLock)
                     {
-                        users.ElementAt(i).Value.Send(notification);
+                        TcpClient clientSocket = default(TcpClient);
+                        clientSocket = server.AcceptTcpClient();
+                        Console.WriteLine("Connected");
+                        NetworkStream stream = clientSocket.GetStream();
+                        User user = new User(stream, clientSocket);
+                        user.displayName = user.ReceiveDisplayName();
+                        users.Add(user.UserId, user);
+                        Message notification = new Message(user, "I've joined the chat!");
+                        log.Save(notification);
+                        for (int i = 0; i < users.Count; i++)
+                        {
+                            users.ElementAt(i).Value.Send(notification);
+                        }
                     }
                 }
             );
