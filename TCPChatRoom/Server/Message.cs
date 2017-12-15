@@ -8,13 +8,20 @@ namespace Server
 {
     class Message
     {
+        //member variables
         public User sender;
         public string Body;
         public int UserId;
+
+        //constructor
         public Message(User Sender, string Body)
         {
             sender = Sender;
-            this.Body = Body;
+            StringBuilder wholeMessage = new StringBuilder();
+            wholeMessage.Append(sender.UserId);
+            wholeMessage.Append(": ");
+            wholeMessage.Append(Body);
+            this.Body = wholeMessage.ToString();
             UserId = sender.UserId;
         }
     }
