@@ -31,10 +31,10 @@ namespace Server
         public Message Recieve()
         {
             byte[] recievedMessage = new byte[256];
+            //write a try catch for stream.Read
             stream.Read(recievedMessage, 0, recievedMessage.Length);
             string recievedMessageString = Encoding.ASCII.GetString(recievedMessage);
             Message message = new Message(this, recievedMessageString);
-            //Console.WriteLine(recievedMessageString);
             return message;
         }
         public string ReceiveDisplayName()
