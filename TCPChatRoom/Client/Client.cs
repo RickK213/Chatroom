@@ -18,17 +18,43 @@ namespace Client
             clientSocket.Connect(IPAddress.Parse(IP), port);
             stream = clientSocket.GetStream();
         }
-        public void Send()
+        Task Send()
         {
-            string messageString = UI.GetInput();
-            byte[] message = Encoding.ASCII.GetBytes(messageString);
-            stream.Write(message, 0, message.Count());
+            return Task.Run(() =>
+            {
+                string messageString = UI.GetInput();
+                byte[] message = Encoding.ASCII.GetBytes(messageString);
+                stream.Write(message, 0, message.Count());
+            });
         }
-        public void Recieve()
+        Task Receive()
         {
-            byte[] recievedMessage = new byte[256];
-            stream.Read(recievedMessage, 0, recievedMessage.Length);
-            UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage));
+            return Task.Run(() =>
+            {
+                byte[] recievedMessage = new byte[256];
+                stream.Read(recievedMessage, 0, recievedMessage.Length);
+                UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage));
+            });
+        }
+
+        public void Run()
+        {
+            while (true)
+            {
+                Parallel.Invoke(
+                    //This thread is always allowing the client to send new messages
+                    async () =>
+                    {
+                        await Send();
+                    },
+                    //This thread is always listening for new messages
+                    async () =>
+                    {
+                        await Receive();
+                    }
+                );
+
+            }
         }
     }
 }

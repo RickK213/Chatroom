@@ -68,45 +68,24 @@ namespace Server
                 );
 
             }
-
-            //string message = client.Recieve();
-            //Respond(message);
         }
 
         Task SendAllMessages()
         {
             return Task.Run(() =>
             {
-                for (int i = 0; i < users.Count; i++)
+                if (messages.Count>0)
                 {
-                    Parallel.Invoke(
-                        async () =>
-                        {
-                            //YOU ARE HERE!!!!!!! NEED TO GET THIS TO WORK ASYNC...RIGHT NOW USER MUST SEND TO RECEIVE
-                            if (messages.Count>0)
-                            {
-                                await SendUserMessage(users.ElementAt(i).Value, messages.Dequeue());
-                            }
-                        }
-                    );
+                    for (int i = 0; i < users.Count; i++)
+                    {
+                        Message currentMessage = messages.ElementAt(messages.Count - 1);
+                        users.ElementAt(i).Value.Send(currentMessage);
+                    }
+                    messages.Dequeue();
                 }
             }
             );
         }
-
-        //void SendMessages(Message message)
-        //{
-        //    for (int i=0; i<users.Count; i++)
-        //    {
-        //        Parallel.Invoke(
-        //            async () =>
-        //            {
-        //                await SendUserMessage(users.ElementAt(i).Value, message);
-        //            }
-        //        );
-        //    }
-        //}
-
 
         Task SendUserMessage(User user, Message message)
         {
@@ -116,7 +95,6 @@ namespace Server
             }
             );
         }
-
 
         Task GetAllMessages()
         {
@@ -146,12 +124,12 @@ namespace Server
             );
         }
 
-        private Task AcceptUser()
+        Task AcceptUser()
         {
             return Task.Run(() =>
                 {
                     TcpClient clientSocket = default(TcpClient);
-                    clientSocket = server.AcceptTcpClient(); //this is blocking
+                    clientSocket = server.AcceptTcpClient();
                     Console.WriteLine("Connected");
                     NetworkStream stream = clientSocket.GetStream();
                     User user = new User(stream, clientSocket);

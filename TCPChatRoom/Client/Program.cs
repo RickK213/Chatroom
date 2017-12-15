@@ -14,11 +14,7 @@ namespace Client
             string serverIPAddress = Console.ReadLine();
 
             Client client = new Client(serverIPAddress, 9999);
-            while(true)
-            {
-                client.Send();
-                client.Recieve();
-            }
+            client.Run();
             Console.ReadLine();
         }
     }
