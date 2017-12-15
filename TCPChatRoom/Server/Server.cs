@@ -131,8 +131,10 @@ namespace Server
                     TcpClient clientSocket = default(TcpClient);
                     clientSocket = server.AcceptTcpClient();
                     Console.WriteLine("Connected");
-                    NetworkStream stream = clientSocket.GetStream();
+                    NetworkStream stream = clientSocket.GetStream();                    
                     User user = new User(stream, clientSocket);
+                    user.displayName = user.ReceiveDisplayName();
+                    Console.WriteLine("{0} has joined the chat!",user.displayName);
                     users.Add(user.UserId, user);
                 }
             );
