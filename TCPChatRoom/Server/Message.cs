@@ -18,7 +18,7 @@ namespace Server
         {
             sender = Sender;
             StringBuilder wholeMessage = new StringBuilder();
-            wholeMessage.Append(sender.UserId);
+            wholeMessage.Append(sender.displayName);
             wholeMessage.Append(": ");
             wholeMessage.Append(Body);
             this.Body = wholeMessage.ToString();

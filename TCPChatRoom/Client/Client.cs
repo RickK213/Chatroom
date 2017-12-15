@@ -17,6 +17,10 @@ namespace Client
             clientSocket = new TcpClient();
             clientSocket.Connect(IPAddress.Parse(IP), port);
             stream = clientSocket.GetStream();
+            Console.WriteLine("Connected! Enter your display name:");
+            string displayName = UI.GetInput();
+            byte[] message = Encoding.ASCII.GetBytes(displayName);
+            stream.Write(message, 0, message.Count());
         }
         Task Send()
         {
