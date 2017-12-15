@@ -22,17 +22,36 @@ namespace Server
             this.displayName = UserId.ToString();
         }
 
+        public void CloseStream()
+        {
+            stream.Close();
+            client.Close();
+        }
+
         public void Send(Message message)
         {
-            byte[] messageBody = Encoding.ASCII.GetBytes(message.Body);
-            stream.Write(messageBody, 0, messageBody.Count());
+            try
+            {
+                byte[] messageBody = Encoding.ASCII.GetBytes(message.Body);
+                stream.Write(messageBody, 0, messageBody.Count());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occurred: '{0}'", e);
+            }
         }
 
         public Message Recieve()
         {
             byte[] recievedMessage = new byte[256];
-            //write a try catch for stream.Read
-            stream.Read(recievedMessage, 0, recievedMessage.Length);
+            try
+            {
+                stream.Read(recievedMessage, 0, recievedMessage.Length);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occurred: '{0}'", e);
+            }
             string recievedMessageString = Encoding.ASCII.GetString(recievedMessage);
             Message message = new Message(this, recievedMessageString);
             return message;
@@ -53,6 +72,11 @@ namespace Server
             Array.Copy(receivedDisplayNameArray, displayNameArray, displayNameLength);
             string receivedDisplayName = Encoding.ASCII.GetString(displayNameArray);
             return receivedDisplayName;
+        }
+
+        public bool CheckIfConnected()
+        {
+            return client.Connected;
         }
 
     }

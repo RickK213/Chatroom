@@ -12,15 +12,23 @@ namespace Server
 
         public void Save(Message message)
         {
-            StreamWriter sw = File.AppendText(@"ChatLog.txt");
+            StreamWriter sw = null;
             try
             {
-                string logLine = String.Format("{0:G}: {1}.", DateTime.Now, message.Body);
+                sw = File.AppendText(@"ChatLog.txt");
+                string logLine = String.Format("{0:G}: {1}", DateTime.Now, message.Body);
                 sw.WriteLine(logLine); 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occurred: '{0}'", e);
             }
             finally
             {
-                sw.Close();
+                if (sw != null)
+                {
+                    sw.Close();
+                }
             }
         }
 
