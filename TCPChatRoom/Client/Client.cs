@@ -26,18 +26,24 @@ namespace Client
         {
             return Task.Run(() =>
             {
-                string messageString = UI.GetInput();
-                byte[] message = Encoding.ASCII.GetBytes(messageString);
-                stream.Write(message, 0, message.Count());
+                if (clientSocket.Connected)
+                {
+                    string messageString = UI.GetInput();
+                    byte[] message = Encoding.ASCII.GetBytes(messageString);
+                    stream.Write(message, 0, message.Count());
+                }
             });
         }
         Task Receive()
         {
             return Task.Run(() =>
             {
-                byte[] recievedMessage = new byte[256];
-                stream.Read(recievedMessage, 0, recievedMessage.Length);
-                UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage));
+                if (clientSocket.Connected)
+                {
+                    byte[] recievedMessage = new byte[256];
+                    stream.Read(recievedMessage, 0, recievedMessage.Length);
+                    UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage));
+                }
             });
         }
 

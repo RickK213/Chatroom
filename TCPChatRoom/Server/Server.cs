@@ -137,7 +137,7 @@ namespace Server
                     NetworkStream stream = clientSocket.GetStream();                    
                     User user = new User(stream, clientSocket);
                     user.displayName = user.ReceiveDisplayName();
-                    users.Add(user.UserId, user);
+                    users.Add(user.UserId, user);                    
                     Message notification = new Message(user, "I've joined the chat!");
                     log.Save(notification);
                     for (int i = 0; i < users.Count; i++)
