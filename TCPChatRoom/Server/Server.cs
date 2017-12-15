@@ -16,12 +16,14 @@ namespace Server
         Dictionary<int, ISubscriber> users;
         TcpListener server;
         Queue<Message> messages;
+        ILoggable log;
 
         //constructor
         public Server()
         {
             messages = new Queue<Message>();
             users = new Dictionary<int, ISubscriber>();
+            log = new TextFileLogger();
             string computerIPAddress = GetComputerIPAddress();
             Console.WriteLine("Local Computer IP Address: " + computerIPAddress);
             Console.WriteLine();
@@ -119,6 +121,7 @@ namespace Server
             {
                 Message message = user.Recieve();
                 Console.WriteLine(message.Body);
+                log.Save(message);
                 messages.Enqueue(message);
             }
             );
@@ -135,9 +138,11 @@ namespace Server
                     User user = new User(stream, clientSocket);
                     user.displayName = user.ReceiveDisplayName();
                     users.Add(user.UserId, user);
-                    for(int i = 0; i < users.Count; i++)
+                    Message notification = new Message(user, "I've joined the chat!");
+                    log.Save(notification);
+                    for (int i = 0; i < users.Count; i++)
                     {
-                        users.ElementAt(i).Value.Notify(user);
+                        users.ElementAt(i).Value.Send(notification);
                     }
                 }
             );

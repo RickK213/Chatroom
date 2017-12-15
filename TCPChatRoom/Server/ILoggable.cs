@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    interface ISubscriber
+    interface ILoggable
     {
-        void Send(Message message);
-        Message Recieve();
+        void Save(Message message);
     }
 }
