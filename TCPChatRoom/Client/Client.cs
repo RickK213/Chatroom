@@ -14,6 +14,7 @@ namespace Client
         NetworkStream stream;
         public Client(string IP, int port)
         {
+            //comment so i can do a pull
             clientSocket = new TcpClient();
             clientSocket.Connect(IPAddress.Parse(IP), port);
             stream = clientSocket.GetStream();
