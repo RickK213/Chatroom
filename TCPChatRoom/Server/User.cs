@@ -43,18 +43,30 @@ namespace Server
 
         public Message Recieve()
         {
-            byte[] recievedMessage = new byte[256];
-            try
+            Object recieveLock = new Object();
+            lock (recieveLock)
             {
-                stream.Read(recievedMessage, 0, recievedMessage.Length);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("An error occurred: '{0}'", e);
-            }
-            string recievedMessageString = Encoding.ASCII.GetString(recievedMessage);
-            Message message = new Message(this, recievedMessageString);
-            return message;
+                byte[] recievedMessage = new byte[256];
+                try
+                {
+                    stream.Read(recievedMessage, 0, recievedMessage.Length);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("An error occurred: '{0}'", e);
+                }
+                string recievedMessageString;
+                if (recievedMessage[0] == 0)
+                {
+                    recievedMessageString = "I've left the chat!";
+                }
+                else
+                {
+                    recievedMessageString = Encoding.ASCII.GetString(recievedMessage);
+                }
+                Message message = new Message(this, recievedMessageString);
+                return message;
+            }            
         }
         public string ReceiveDisplayName()
         {

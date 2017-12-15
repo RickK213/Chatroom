@@ -81,7 +81,7 @@ namespace Server
         {
             return Task.Run(() =>
             {
-                Object userListLock = new object();
+                Object userListLock = new Object();
                 lock (userListLock)
                 {
                     for (int i = 0; i < users.Count; i++)
@@ -89,9 +89,6 @@ namespace Server
                         User currentUser = (User)users.ElementAt(i).Value;
                         if (!currentUser.CheckIfConnected())
                         {
-                            Message message = new Message(currentUser, "I've left the chat!");
-                            messages.Enqueue(message);
-                            log.Save(message);
                             int userKey = users.ElementAt(i).Key;
                             users.Remove(userKey);
                         }
@@ -105,17 +102,19 @@ namespace Server
         {
             return Task.Run(() =>
             {
-                Object messageLock = new object();
+                Object messageLock = new Object();
                 lock ( messageLock )
                 {
                     if (messages.Count > 0)
                     {
                         for (int i = 0; i < users.Count; i++)
                         {
-                            Message currentMessage = messages.ElementAt(messages.Count - 1);
-                            users.ElementAt(i).Value.Send(currentMessage);
+                            for(int j = 0; j < messages.Count; j++)
+                            {
+                                users.ElementAt(i).Value.Send(messages.ElementAt(j));
+                            }
                         }
-                        messages.Dequeue();
+                        messages.Clear();
                     }
                 }
             }
@@ -138,7 +137,7 @@ namespace Server
         {
             return Task.Run(() =>
             {
-                Object messageLock = new object();
+                Object messageLock = new Object();
                 lock (messageLock)
                 {
 
@@ -160,12 +159,16 @@ namespace Server
         {
             return Task.Run(() =>
             {
-                if (user.CheckIfConnected())
+                Object messageLock = new Object();
+                lock (messageLock)
                 {
-                    Message message = user.Recieve();
-                    Console.WriteLine(message.Body);
-                    log.Save(message);
-                    messages.Enqueue(message);
+                    if (user.CheckIfConnected())
+                    {
+                        Message message = user.Recieve();
+                        Console.WriteLine(message.Body);
+                        log.Save(message);
+                        messages.Enqueue(message);
+                    }
                 }
             }
             );
@@ -175,7 +178,7 @@ namespace Server
         {
             return Task.Run(() =>
                 {
-                    Object userListLock = new object();
+                    Object userListLock = new Object();
                     lock (userListLock)
                     {
                         TcpClient clientSocket = default(TcpClient);
