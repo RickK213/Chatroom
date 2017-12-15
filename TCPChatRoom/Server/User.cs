@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class User
+    class User : ISubscriber
     {
         NetworkStream stream;
         TcpClient client;
@@ -55,5 +55,11 @@ namespace Server
             return receivedDisplayName;
         }
 
+        public void Notify(User newUser)
+        {
+            Message notification = new Message(newUser, "I've joined the chat!");
+            Send(notification);
+
+        }
     }
 }

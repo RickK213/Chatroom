@@ -13,7 +13,7 @@ namespace Server
     class Server
     {
         //member variables
-        Dictionary<int, User> users;
+        Dictionary<int, ISubscriber> users;
         TcpListener server;
         Queue<Message> messages;
 
@@ -21,7 +21,7 @@ namespace Server
         public Server()
         {
             messages = new Queue<Message>();
-            users = new Dictionary<int, User>();
+            users = new Dictionary<int, ISubscriber>();
             string computerIPAddress = GetComputerIPAddress();
             Console.WriteLine("Local Computer IP Address: " + computerIPAddress);
             Console.WriteLine();
@@ -113,7 +113,7 @@ namespace Server
             );
         }
 
-        Task GetUserMessage(User user)
+        Task GetUserMessage(ISubscriber user)
         {
             return Task.Run(() =>
             {
@@ -134,8 +134,11 @@ namespace Server
                     NetworkStream stream = clientSocket.GetStream();                    
                     User user = new User(stream, clientSocket);
                     user.displayName = user.ReceiveDisplayName();
-                    Console.WriteLine("{0} has joined the chat!",user.displayName);
                     users.Add(user.UserId, user);
+                    for(int i = 0; i < users.Count; i++)
+                    {
+                        users.ElementAt(i).Value.Notify(user);
+                    }
                 }
             );
         }
