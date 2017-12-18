@@ -30,14 +30,18 @@ namespace Server
 
         public void Send(Message message)
         {
-            try
+            Object recieveLock = new Object();
+            lock (recieveLock)
             {
-                byte[] messageBody = Encoding.ASCII.GetBytes(message.Body);
-                stream.Write(messageBody, 0, messageBody.Count());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("An error occurred: '{0}'", e);
+                try
+                {
+                    byte[] messageBody = Encoding.ASCII.GetBytes(message.Body);
+                    stream.Write(messageBody, 0, messageBody.Count());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("An error occurred: '{0}'", e);
+                }
             }
         }
 
