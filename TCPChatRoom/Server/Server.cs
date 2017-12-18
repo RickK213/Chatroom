@@ -50,7 +50,6 @@ namespace Server
         {
             while(true)
             {
-                //TO DO: use a try catch here
                 Parallel.Invoke(
                     //This thread is always listening for new clients (users)
                     async () =>
@@ -73,7 +72,6 @@ namespace Server
                     }
 
                 );
-
             }
         }
 
@@ -94,8 +92,7 @@ namespace Server
                         }
                     }
                 }
-            }
-            );
+            });
         }
 
         Task SendAllMessages()
@@ -117,20 +114,22 @@ namespace Server
                         messages.Clear();
                     }
                 }
-            }
-            );
+            });
         }
 
         Task SendUserMessage(User user, Message message)
         {
             return Task.Run(() =>
             {
-                if (user.CheckIfConnected())
+                Object messageLock = new Object();
+                lock (messageLock)
                 {
-                    user.Send(message);
+                    if (user.CheckIfConnected())
+                    {
+                        user.Send(message);
+                    }
                 }
-            }
-            );
+            });
         }
 
         Task GetAllMessages()
@@ -140,19 +139,17 @@ namespace Server
                 Object messageLock = new Object();
                 lock (messageLock)
                 {
-
                     for (int i = 0; i < users.Count; i++)
-                        {
-                            Parallel.Invoke(
-                                async () =>
-                                {
-                                    await GetUserMessage(users.ElementAt(i).Value);
-                                }
-                            );
-                        }
+                    {
+                        Parallel.Invoke(
+                            async () =>
+                            {
+                                await GetUserMessage(users.ElementAt(i).Value);
+                            }
+                        );
                     }
                 }
-            );
+            });
         }
 
         Task GetUserMessage(ISubscriber user)
@@ -170,33 +167,31 @@ namespace Server
                         messages.Enqueue(message);
                     }
                 }
-            }
-            );
+            });
         }
 
         Task AcceptUser()
         {
             return Task.Run(() =>
+            {
+                Object userListLock = new Object();
+                lock (userListLock)
                 {
-                    Object userListLock = new Object();
-                    lock (userListLock)
+                    TcpClient clientSocket = default(TcpClient);
+                    clientSocket = server.AcceptTcpClient();
+                    Console.WriteLine("Connected");
+                    NetworkStream stream = clientSocket.GetStream();
+                    User user = new User(stream, clientSocket);
+                    user.displayName = user.ReceiveDisplayName();
+                    users.Add(user.UserId, user);
+                    Message notification = new Message(user, "I've joined the chat!");
+                    log.Save(notification);
+                    for (int i = 0; i < users.Count; i++)
                     {
-                        TcpClient clientSocket = default(TcpClient);
-                        clientSocket = server.AcceptTcpClient();
-                        Console.WriteLine("Connected");
-                        NetworkStream stream = clientSocket.GetStream();
-                        User user = new User(stream, clientSocket);
-                        user.displayName = user.ReceiveDisplayName();
-                        users.Add(user.UserId, user);
-                        Message notification = new Message(user, "I've joined the chat!");
-                        log.Save(notification);
-                        for (int i = 0; i < users.Count; i++)
-                        {
-                            users.ElementAt(i).Value.Send(notification);
-                        }
+                        users.ElementAt(i).Value.Send(notification);
                     }
                 }
-            );
+            });
         }
 
     }

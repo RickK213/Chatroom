@@ -14,7 +14,6 @@ namespace Client
         NetworkStream stream;
         public Client(string IP, int port)
         {
-            //comment so i can do a pull
             clientSocket = new TcpClient();
             clientSocket.Connect(IPAddress.Parse(IP), port);
             stream = clientSocket.GetStream();
@@ -27,11 +26,15 @@ namespace Client
         {
             return Task.Run(() =>
             {
-                if (clientSocket.Connected)
+                Object messageLock = new Object();
+                lock (messageLock)
                 {
-                    string messageString = UI.GetInput();
-                    byte[] message = Encoding.ASCII.GetBytes(messageString);
-                    stream.Write(message, 0, message.Count());
+                    if (clientSocket.Connected)
+                    {
+                        string messageString = UI.GetInput();
+                        byte[] message = Encoding.ASCII.GetBytes(messageString);
+                        stream.Write(message, 0, message.Count());
+                    }
                 }
             });
         }
@@ -39,11 +42,15 @@ namespace Client
         {
             return Task.Run(() =>
             {
-                if (clientSocket.Connected)
+                Object messageLock = new Object();
+                lock (messageLock)
                 {
-                    byte[] recievedMessage = new byte[256];
-                    stream.Read(recievedMessage, 0, recievedMessage.Length);
-                    UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage));
+                    if (clientSocket.Connected)
+                    {
+                        byte[] recievedMessage = new byte[256];
+                        stream.Read(recievedMessage, 0, recievedMessage.Length);
+                        UI.DisplayMessage(Encoding.ASCII.GetString(recievedMessage));
+                    }
                 }
             });
         }
@@ -64,7 +71,6 @@ namespace Client
                         await Receive();
                     }
                 );
-
             }
         }
     }
