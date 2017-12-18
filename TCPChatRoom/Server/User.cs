@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Server
 {
@@ -62,13 +63,13 @@ namespace Server
                 string recievedMessageString;
                 if (recievedMessage[0] == 0)
                 {
-                    recievedMessageString = "I've left the chat!";
+                    recievedMessageString = "I've left the chat!";            
                 }
                 else
                 {
                     recievedMessageString = Encoding.ASCII.GetString(recievedMessage);
                 }
-                Message message = new Message(this, recievedMessageString);
+                Message message = new Message(this, recievedMessageString);        
                 return message;
             }            
         }
