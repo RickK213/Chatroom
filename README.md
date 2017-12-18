@@ -12,7 +12,7 @@
 <li>All messages are stored in a Queue.</li>
 <li>SOLID deisgn principles were used in the following ways:</li>
 <ul>
-<li>The dependency injection design pattern was used for logging. This creates low coupling and high cohesion. This satisfies the "D" in the SOLID principles &mdash; The Dependency Inversion Principle.<li>
+<li>The dependency injection design pattern was used for logging. This creates low coupling and high cohesion. This satisfies the "D" in the SOLID principles &mdash; The Dependency Inversion Principle.</li>
 <li>The Single Responsibility ("S" in SOLID) is satisfied in the CheckIfConnected method in the User class. This method does one thing and one thing well.</li>
 </ul>
 </ul>
